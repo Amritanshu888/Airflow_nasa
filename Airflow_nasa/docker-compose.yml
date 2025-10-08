@@ -1,0 +1,29 @@
+version : '3'
+services:
+  postgres:
+    image : postgres:13  ## Image we will be pulling from docker hub.
+    container_name : postgres_db ## Default container name
+    environment :
+      POSTGRES_USER : postgres  ## For Postgres these are the environment variables.
+      POSTGRES_PASSWORD : postgres
+      POSTGRES_DB : postgres
+    ports :
+     - "5432:5432"   ## Host port and docker container port
+    volumes :
+     - postgres_data:/var/lib/postgresql/data  ## Whenever i make any changes in my local/any of my code : then only it should be getting reflected automatically , no need to restart my docker container. It will save all the information in the particluar path given in volumes.
+    networks :
+     - airflow_network    ## The network here we are using is Airflow Network.
+
+## Whenever u create any other docker container please make sure that , like along with postgres u want to use sql , so i will be
+## writing a entirely different service over there. Like how we have written postgres i will be writing different service like MySQL(all the info will be there).
+## Since these both needs to be interacting we will create a common network , bcoz of this common network they will be able to interact with each other.
+
+## The below command ensures that docker compose creates a new network if it does not exist.
+## If u create another service then at the end i have to write this particular network (airflow network) so that they will be able to interact with each other.(Both those docker containers)
+networks:
+  airflow_network:
+    external: false   
+
+## Creating a new volume if it does not exist
+volumes:
+   postgres_data:
